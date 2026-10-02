@@ -134,7 +134,6 @@ function combinations(list, k) {
     return result;
 }
 
-// ⚠️ IMPORTANT: Must include 'export' here so main.js can use it!
 export function evaluatePokerHand(playerCards, communityCards) {
     const allCards = [...playerCards, ...communityCards];
 

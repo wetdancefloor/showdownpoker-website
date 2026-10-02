@@ -7,7 +7,7 @@ import {
     Vector3,
 } from 'three';
 
-import { evaluatePokerHand } from './pokerEvaluator.js'; // Make sure this path points to your evaluator
+import { evaluatePokerHand } from './pokerEvaluator.js';
 
 const textureLoader = new TextureLoader();
 const cardGeo = new BoxGeometry(1, 1.5, 0.05);
@@ -33,7 +33,7 @@ suits.forEach(suit => {
 const coverTexture = textureLoader.load('/card back.png');
 coverTexture.colorSpace = SRGBColorSpace;
 
-const sideMaterial = new MeshBasicMaterial({ color: 0xffffff }); // White edges
+const sideMaterial = new MeshBasicMaterial({ color: 0xffffff }); 
 
 const CARDS = [];
 
@@ -75,7 +75,7 @@ export function setupPokerGame(scene) {
             cardMesh.position.y = cardIndex * 0.051; 
             cardMesh.rotation.x = -Math.PI / 2;
 
-            // Optional: Give deck stack cards userData too just in case
+            // Optional: Give deck stack cards
             cardMesh.userData = {
                 rank: getNormalHand(value),
                 suit: suit,
@@ -193,7 +193,7 @@ export function setupPokerGame(scene) {
         scene.add(opponentCard);
     }
 
-    // --- 5. EVALUATE AUTOMATICALLY AFTER DEAL ---
+    // --- 5. Evaluate after Dealing ---
     const evaluatedHand = evaluatePokerHand(initialPlayerHand, []);
     console.log("Initial Hand Evaluated:", evaluatedHand);
 

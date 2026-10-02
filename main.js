@@ -55,7 +55,7 @@ peer.on("open", (id) => {
     console.log("My peer ID is: " + id);
 });
 
-const conn = peer.connect("another-peer-id"); // Replace with the actual peer ID you want to connect to
+const conn = peer.connect("another-peer-id");
 
 conn.on("open", () => {
     console.log("Connection established with another peer.");
@@ -112,7 +112,7 @@ window.addEventListener('click', function(e) {
     hoveredCard.userData.played = true;
     hoveredCard.userData.selected = true;
 
-    // --- ADDED: Extract card data from its name (e.g., "playerCard_Clovers_Jack") ---
+    // Extract card data from its name (e.g., "playerCard_Clovers_Jack") ---
     const nameParts = clickedObject.name.split('_'); 
     if (nameParts.length >= 3) {
         const suit = nameParts[1];
@@ -125,7 +125,7 @@ window.addEventListener('click', function(e) {
         selectedPlayerCards.push({ rank, suit });
     }
 
-    // --- PLAYER CARD ANIMATION (Your exact working code) ---
+    // --- PLAYER CARD ANIMATION ---
     const tl = new gsap.timeline({
         defaults: { duration: 0.4, delay: 0.1 }
     });
