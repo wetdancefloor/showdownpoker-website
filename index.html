@@ -5,8 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/style.css">
+    <title>3D Poker</title>
 </head>
 <body>
+    <div id="webgl-container"></div>
+
+    <div id="ui-layer">
+        <div id="hand-combo-box" class="hud-panel">
+            <div class="combo-title">Current Hand</div>
+            <div id="combo-text" class="combo-value">High Card</div>
+        </div>
+
+        <!-- <div id="action-buttons" class="interactive">
+            <button class="btn btn-fold" id="btn-fold">Fold</button>
+            <button class="btn" id="btn-call">Check / Call</button>
+        </div> -->
+    </div>
+
     <script src="/main.js" type="module"></script>
 </body>
 </html>

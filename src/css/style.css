@@ -1,3 +1,96 @@
 body {
-    margin: 0
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+    background-color: #111;
 }
+
+/* Three.js canvas container takes full screen */
+#webgl-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vw; /* Fixed typo check: should be height: 100vh */
+    height: 100vh;
+    z-index: 1;
+}
+
+/* UI overlay layer */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    pointer-events: none; /* Let clicks pass through to Three.js canvas by default */
+}
+
+/* Re-enable pointer events for interactive HUD items */
+.interactive {
+    pointer-events: auto;
+}
+
+/* Common HUD Panel Styling */
+.hud-panel {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Combo Box Positioning */
+#hand-combo-box {
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.combo-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.combo-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4ade80;
+}
+
+/* Action Buttons Positioning */
+#action-buttons {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover { background: #1d4ed8; }
+.btn:active { transform: scale(0.97); }
+
+.btn-fold { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); }
+.btn-fold:hover { background: #b91c1c; }

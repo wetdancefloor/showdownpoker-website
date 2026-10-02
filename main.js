@@ -4,6 +4,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {CARDS, cardTextures, coverTexture} from './src/deck.js';
 import { setupPokerGame } from './src/deck.js';
 import gsap from 'gsap';
+import { evaluatePokerHand } from './src/pokerEvaluator.js';
+import { Peer } from "peerjs";
 
 const gltfLoader = new GLTFLoader();
 
@@ -12,6 +14,11 @@ const mousePosition = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 let x = -2;
 
+// 1. Keep track of cards the player has selected
+const selectedPlayerCards = [];
+
+// Cache the UI element
+const comboTextElement = document.getElementById('combo-text');
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -42,6 +49,25 @@ directionalLight.shadow.mapSize.height = 1024;
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
 scene.add(ambientLight);
 
+const peer = new Peer();
+
+peer.on("open", (id) => {
+    console.log("My peer ID is: " + id);
+});
+
+const conn = peer.connect("another-peer-id"); // Replace with the actual peer ID you want to connect to
+
+conn.on("open", () => {
+    console.log("Connection established with another peer.");
+    conn.send("Hello from the first peer!");
+});
+
+peer.on("connection", (conn) => {
+    conn.on("data", (data) => {
+        console.log("Received data from another peer:", data);
+    });
+});
+
 gltfLoader.load('./kitchen_table.glb', function(glb) {
     const model = glb.scene;
     scene.add(model);
@@ -60,11 +86,7 @@ gltfLoader.load('./kitchen_table.glb', function(glb) {
 const gridHelper = new THREE.GridHelper(12, 12);
 scene.add(gridHelper);
 
-CARDS.forEach(function(card) {
-    scene.add(card);
-});
-
-// setupPokerGame(scene);
+setupPokerGame(scene);
 
 window.addEventListener('click', function(e) {
     mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -72,7 +94,6 @@ window.addEventListener('click', function(e) {
 
     raycaster.setFromCamera(mousePosition, camera);
     
-    // Raycast against your CARDS array
     const intersects = raycaster.intersectObjects(CARDS);
     if (intersects.length === 0) return; 
 
@@ -84,7 +105,27 @@ window.addEventListener('click', function(e) {
     let hoveredCard = clickedObject;
     if (!hoveredCard) return;
 
-    // --- PLAYER CARD ANIMATION ---
+    // If the card is already played or selected, ignore the click completely
+    if (hoveredCard.userData.played || hoveredCard.userData.selected) return;
+
+    // Otherwise, lock it immediately
+    hoveredCard.userData.played = true;
+    hoveredCard.userData.selected = true;
+
+    // --- ADDED: Extract card data from its name (e.g., "playerCard_Clovers_Jack") ---
+    const nameParts = clickedObject.name.split('_'); 
+    if (nameParts.length >= 3) {
+        const suit = nameParts[1];
+        const rawValue = nameParts[2];
+        // Normalize face cards (Jack -> J, Queen -> Q, etc.)
+        const rank = rawValue === 'Jack' ? 'J' : 
+                     rawValue === 'Queen' ? 'Q' : 
+                     rawValue === 'King' ? 'K' : rawValue;
+
+        selectedPlayerCards.push({ rank, suit });
+    }
+
+    // --- PLAYER CARD ANIMATION (Your exact working code) ---
     const tl = new gsap.timeline({
         defaults: { duration: 0.4, delay: 0.1 }
     });
@@ -99,9 +140,9 @@ window.addEventListener('click', function(e) {
         x // Uses your dynamic x position
     }, 0)
     .to(hoveredCard.scale, {
-        x: 1.5,
-        y: 1.5,
-        z: 1.5
+        x: 1.1,
+        y: 1.1,
+        z: 1.1
     }, 0)
     .to(hoveredCard.rotation, {
         y: 0,
@@ -140,9 +181,9 @@ window.addEventListener('click', function(e) {
             x: x // Matches the player's horizontal slot
         }, 0)
         .to(chosenOpponentCard.scale, {
-            x: 1.5,
-            y: 1.5,
-            z: 1.5
+            x: 1.1,
+            y: 1.1,
+            z: 1.1
         }, 0)
         .to(chosenOpponentCard.rotation, {
             y: 0,
@@ -156,6 +197,29 @@ window.addEventListener('click', function(e) {
 
     // Increment player X slot for next turn
     if (x < 2) x++;
+
+    // --- Evaluate hand and update HTML UI ---
+    console.log("Selected player cards count:", selectedPlayerCards.length);
+    console.log("Current cards:", selectedPlayerCards);
+
+    const comboTextElement = document.getElementById('combo-text');
+
+    if (selectedPlayerCards.length < 5) {
+        if (comboTextElement) {
+            comboTextElement.textContent = `Cards: ${selectedPlayerCards.length}/5`;
+        }
+    } else {
+        const evaluatedHand = evaluatePokerHand(selectedPlayerCards, []);
+        console.log("Evaluated Hand Result:", evaluatedHand);
+
+        if (comboTextElement) {
+            if (evaluatedHand && evaluatedHand.name) {
+                comboTextElement.textContent = evaluatedHand.name;
+            } else {
+                comboTextElement.textContent = "High Card";
+            }
+        }
+    }
 });
 
 function animate() {
