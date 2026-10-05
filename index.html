@@ -4,24 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="./src/css/style.css">
     <title>3D Poker</title>
 </head>
 <body>
+    <!-- 3D Game Container -->
     <div id="webgl-container"></div>
 
+    <!-- UI Layer containing all HUD elements -->
     <div id="ui-layer">
+        <!-- Current Poker Hand Display -->
         <div id="hand-combo-box" class="hud-panel">
             <div class="combo-title">Current Hand</div>
             <div id="combo-text" class="combo-value">High Card</div>
         </div>
 
-        <!-- <div id="action-buttons" class="interactive">
-            <button class="btn btn-fold" id="btn-fold">Fold</button>
-            <button class="btn" id="btn-call">Check / Call</button>
-        </div> -->
+        <!-- Integrated Table Chat Box -->
+        <div id="chat-box" class="hud-panel">
+            <div class="combo-title">Table Chat</div>
+            <ul id="messages"></ul>
+            <div class="chat-input-row">
+                <input type="text" id="message" placeholder="Type a message..." autocomplete="off">
+                <button id="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
     </div>
-
+    
+    <script src="./src/client.js"></script>
     <script src="/main.js" type="module"></script>
 </body>
 </html>

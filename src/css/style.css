@@ -6,6 +6,26 @@ body {
     background-color: #111;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+input[type="text"] {
+  width: 200px;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 /* Three.js canvas container takes full screen */
 #webgl-container {
     position: absolute;
@@ -31,6 +51,12 @@ body {
 /* Re-enable pointer events for interactive HUD items */
 .interactive {
     pointer-events: auto;
+}
+
+/* Force the chat container and everything inside it to accept mouse clicks */
+#chat-box, 
+#chat-box * {
+    pointer-events: auto !important;
 }
 
 /* Common HUD Panel Styling */

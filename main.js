@@ -5,7 +5,6 @@ import {CARDS, cardTextures, coverTexture} from './src/deck.js';
 import { setupPokerGame } from './src/deck.js';
 import gsap from 'gsap';
 import { evaluatePokerHand } from './src/pokerEvaluator.js';
-import { Peer } from "peerjs";
 
 const gltfLoader = new GLTFLoader();
 
@@ -49,23 +48,18 @@ directionalLight.shadow.mapSize.height = 1024;
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
 scene.add(ambientLight);
 
-const peer = new Peer();
+const chatBox = document.getElementById('chat-box');
 
-peer.on("open", (id) => {
-    console.log("My peer ID is: " + id);
-});
-
-const conn = peer.connect("another-peer-id");
-
-conn.on("open", () => {
-    console.log("Connection established with another peer.");
-    conn.send("Hello from the first peer!");
-});
-
-peer.on("connection", (conn) => {
-    conn.on("data", (data) => {
-        console.log("Received data from another peer:", data);
+// Prevent Three.js controls from stealing clicks or dragging the camera when interacting with chat
+['mousedown', 'click', 'dblclick', 'contextmenu', 'wheel'].forEach(eventType => {
+    chatBox.addEventListener(eventType, (event) => {
+        event.stopPropagation();
     });
+});
+
+// Ensure keyboard events (typing messages) don't trigger Three.js keybinds
+chatBox.addEventListener('keydown', (event) => {
+    event.stopPropagation();
 });
 
 gltfLoader.load('./kitchen_table.glb', function(glb) {
@@ -89,6 +83,9 @@ scene.add(gridHelper);
 setupPokerGame(scene);
 
 window.addEventListener('click', function(e) {
+
+    if (e.target.closest('#ui-layer')) return;
+    
     mousePosition.x = (e.clientX / window.innerWidth) * 2 - 1;
     mousePosition.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
@@ -125,7 +122,7 @@ window.addEventListener('click', function(e) {
         selectedPlayerCards.push({ rank, suit });
     }
 
-    // --- PLAYER CARD ANIMATION ---
+    // PLAYER CARD ANIMATION
     const tl = new gsap.timeline({
         defaults: { duration: 0.4, delay: 0.1 }
     });
