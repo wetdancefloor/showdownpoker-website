@@ -42,7 +42,7 @@ function configureCard(card, pos, rot, rNumb, name, userData) {
     card.castShadow = true;
     card.position.copy(pos[rNumb]);
     card.rotation.set(rot[rNumb].x, rot[rNumb].y, rot[rNumb].z);
-    card.userData = userData; // <-- Attach userData here
+    card.userData = userData;
     pos.splice(rNumb, 1);
     rot.splice(rNumb, 1);
     CARDS.push(card);
@@ -193,7 +193,7 @@ export function setupPokerGame(scene) {
         scene.add(opponentCard);
     }
 
-    // --- 5. Evaluate after Dealing ---
+    // 5. Evaluate after Dealing
     const evaluatedHand = evaluatePokerHand(initialPlayerHand, []);
     console.log("Initial Hand Evaluated:", evaluatedHand);
 

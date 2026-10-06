@@ -1,5 +1,6 @@
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+const chat = document.getElementById('chat');
 // p;
 const server = createServer();
 const io = new SocketIOServer(server, { cors: { origin: '*' } }); // cors only for development testing!
@@ -18,21 +19,25 @@ export function setupSocket(io) {
       socket.join(roomId);
       console.log(`Client ${socket.id} joined room: ${roomId}`);
 
-      socket.timeout(roomId).emit('message', 'System: A new player joined.');
-      callback({ success: true, roomId });
+      io.to(roomId).emit('message', 'System: A new player joined.');
+      
+      if (callback) {
+        callback({ success: true, roomId });
+      }
     });
 
     // Handle messages from the client
-    socket.on('message', (message) => {
-      console.log('Message received:', message);
+    socket.on('message', (data) => {
+      console.log('chat', {'Message received:', data});
 
       // Send message to all clients, including the one who sent the message
-      io.emit('message', message);
+      io.emit('message', data);
+
     });
 
     // Handle disconnections
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      console.log('Client disconnected', socket.id);
     });
   });
 };

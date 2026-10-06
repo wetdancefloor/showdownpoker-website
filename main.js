@@ -48,7 +48,7 @@ directionalLight.shadow.mapSize.height = 1024;
 const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
 scene.add(ambientLight);
 
-const chatBox = document.getElementById('chat-box');
+const chatBox = document.getElementById('chat-container');
 
 // Prevent Three.js controls from stealing clicks or dragging the camera when interacting with chat
 ['mousedown', 'click', 'dblclick', 'contextmenu', 'wheel'].forEach(eventType => {
