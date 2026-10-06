@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-
+// p;
 const server = createServer();
 const io = new SocketIOServer(server, { cors: { origin: '*' } }); // cors only for development testing!
 
