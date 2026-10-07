@@ -28,7 +28,7 @@ export function setupSocket(io) {
 
     // Handle messages from the client
     socket.on('message', (data) => {
-      console.log('chat', {'Message received:', data});
+      console.log('chat', {'Message received:': data});
 
       // Send message to all clients, including the one who sent the message
       io.emit('message', data);
